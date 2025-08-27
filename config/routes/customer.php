@@ -55,7 +55,7 @@ return HttpRouteCreator::create()
 							->setMayTerminate(false)
 							->setChildRoutes(
 								[
-									HttpRouteCreator::create()
+									'do' => HttpRouteCreator::create()
 										->setAction(Activate::class)
 										->setMethods([ 'POST' ]),
 								]
