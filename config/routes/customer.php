@@ -18,7 +18,7 @@ return HttpRouteCreator::create()
 				->setMayTerminate(false)
 				->setChildRoutes(
 					[
-						HttpRouteCreator::create()
+						'do' => HttpRouteCreator::create()
 							->setAction(Login::class)
 							->setMethods([ 'POST' ]),
 					]
@@ -28,7 +28,7 @@ return HttpRouteCreator::create()
 				->setMayTerminate(false)
 				->setChildRoutes(
 					[
-						HttpRouteCreator::create()
+						'do' => HttpRouteCreator::create()
 							->setAction(Register::class)
 							->setMethods([ 'POST' ]),
 					]
