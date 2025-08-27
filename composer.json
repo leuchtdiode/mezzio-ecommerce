@@ -1,0 +1,55 @@
+{
+	"name": "leuchtdiode/mezzio-ecommerce",
+	"description": "Mezzio E-commerce module",
+	"type": "library",
+	"license": "MIT",
+	"homepage": "https://try2catch.com",
+	"authors": [
+		{
+			"name": "Alex Schloegl",
+			"email": "alex@try2catch.com",
+			"homepage": "https://try2catch.com",
+			"role": "Developer"
+		}
+	],
+	"keywords": [
+		"Mezzio",
+		"Module",
+		"E-Commerce",
+		"Payment",
+		"Shop"
+	],
+	"require": {
+		"php": "~8.3.0 || ~8.4.0",
+		"ext-curl": "*",
+		"ext-json": "*",
+		"ext-openssl": "*",
+		"ext-gettext": "*",
+		"ext-intl": "*",
+		"leuchtdiode/mezzio-common": "^1.0.0",
+		"leuchtdiode/mezzio-log": "^1.0.0",
+		"leuchtdiode/mezzio-mail": "^1.0.0",
+		"leuchtdiode/mezzio-async-queue": "^1.0.0",
+		"leuchtdiode/mezzio-assets": "^1.0.0",
+		"laminas/laminas-eventmanager": "^3.14.0",
+		"beberlei/doctrineextensions": "^v1.5.0",
+		"ramsey/uuid-doctrine": "^2.1.0",
+		"firebase/php-jwt": "^v6.11.0",
+		"moneyphp/money": "^v4.7.0",
+		"spipu/html2pdf": "^5.3.0"
+	},
+	"suggest": {
+		"mpay24/mpay24-php": "Mandatory if using mpay24/Unzer method handler",
+		"paypal/rest-api-sdk-php": "Mandatory if using PayPal method handler"
+	},
+	"autoload": {
+		"psr-4": {
+			"Ecommerce\\": "src/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"ocramius/package-versions": true
+		}
+	}
+}

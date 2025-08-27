@@ -1,0 +1,124 @@
+<?php
+namespace Ecommerce\Rest\Action\Customer\Address;
+
+use Common\Hydration\ObjectToArrayHydrator;
+use Ecommerce\Address\AddModifyData as AddressAddModifyData;
+use Ecommerce\Address\AddModifyHandler;
+use Ecommerce\Address\Provider as AddressProvider;
+use Ecommerce\Rest\Action\Base;
+use Ecommerce\Rest\Action\Response;
+use Psr\Http\Message\ResponseInterface;
+use Throwable;
+
+class AddOrModify extends Base
+{
+	private AddOrModifyData $data;
+
+	private AddModifyHandler $addModifyHandler;
+
+	private AddressProvider $addressProvider;
+
+	public function __construct(
+		AddOrModifyData $data,
+		AddModifyHandler $addModifyHandler,
+		AddressProvider $addressProvider
+	)
+	{
+		$this->data             = $data;
+		$this->addModifyHandler = $addModifyHandler;
+		$this->addressProvider  = $addressProvider;
+	}
+
+	/**
+	 * @throws Throwable
+	 */
+	public function executeAction(): ResponseInterface
+	{
+		$customerId = $this->getRouteParam('id');
+
+		if (!$this->customerCheck($customerId))
+		{
+			return $this->forbidden();
+		}
+
+		$addressId = $this->getRouteParam('addressId');
+
+		$address = null;
+
+		if ($addressId)
+		{
+			$address = $this->addressProvider->byId($addressId);
+		}
+
+		$values = $this->data
+			->setRequest($this->getRequest())
+			->getValues();
+
+		if ($values->hasErrors())
+		{
+			return Response::is()
+				->unsuccessful()
+				->errors($values->getErrors())
+				->dispatch();
+		}
+
+		$result = $this->addModifyHandler->addOrModify(
+			AddressAddModifyData::create()
+				->setAddress($address)
+				->setCustomer($this->getCustomer())
+				->setCountry(
+					$values
+						->get(AddOrModifyData::COUNTRY)
+						->getValue()
+				)
+				->setZip(
+					$values
+						->get(AddOrModifyData::ZIP)
+						->getValue()
+				)
+				->setCity(
+					$values
+						->get(AddOrModifyData::CITY)
+						->getValue()
+				)
+				->setStreet(
+					$values
+						->get(AddOrModifyData::STREET)
+						->getValue()
+				)
+				->setExtra(
+					$values
+						->get(AddOrModifyData::EXTRA)
+						->getValue()
+				)
+				->setDefaultBilling(
+					$values
+						->get(AddOrModifyData::DEFAULT_BILLING)
+						->getValue() ?? false
+				)
+				->setDefaultShipping(
+					$values
+						->get(AddOrModifyData::DEFAULT_SHIPPING)
+						->getValue() ?? false
+				)
+		);
+
+		if (!$result->isSuccess())
+		{
+			return Response::is()
+				->unsuccessful()
+				->errors($result->getErrors())
+				->dispatch();
+		}
+
+		return Response::is()
+			->successful()
+			->data(
+				ObjectToArrayHydrator::hydrate(
+					AddOrModifySuccessData::create()
+						->setAddress($result->getAddress())
+				)
+			)
+			->dispatch();
+	}
+}
