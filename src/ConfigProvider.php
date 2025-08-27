@@ -23,7 +23,7 @@ class ConfigProvider
 	{
 		$config = require __DIR__ . '/../config/module.config.php';
 
-		$config['routes'] = FlattenRoutes::flatten($config['routes']);
+		$config['routes'] = FlattenRoutes::flatten($config['router']['routes']);
 		unset($config['router']);
 
 		return $config;
